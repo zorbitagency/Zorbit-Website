@@ -1,0 +1,6 @@
+{
+  "name": "MONOLITH Marketing Agency",
+  "description": "Dynamic high-performance marketing agency featuring smooth parallax scrolling, interactive project showcases, and backend media asset management.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
