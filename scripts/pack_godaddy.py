@@ -100,6 +100,13 @@ Simply unpack, update images or text, or re-export from your AI Studio environme
 with open(os.path.join(DIST_DIR, "README_GODADDY.txt"), "w") as f:
     f.write(readme_content)
 
+# Copy dist to docs for GitHub Pages /docs folder support
+docs_dir = os.path.join(ROOT_DIR, "docs")
+if os.path.exists(docs_dir):
+    shutil.rmtree(docs_dir)
+shutil.copytree(DIST_DIR, docs_dir)
+print("Synced build to docs/ directory for zero-config GitHub Pages deployment!")
+
 # 3. Create godaddy_website_build.zip
 godaddy_zip_path = os.path.join(DOWNLOADS_DIR, "godaddy_website_build.zip")
 print(f"Creating {godaddy_zip_path}...")
