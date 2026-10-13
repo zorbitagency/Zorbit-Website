@@ -14,7 +14,9 @@ import {
   ShieldCheck,
   ChevronRight,
   Copy,
-  Check
+  Check,
+  GitBranch,
+  AlertTriangle
 } from 'lucide-react';
 import { playClickSound } from '../utils/audio';
 
@@ -29,7 +31,7 @@ export const GodaddyExportModal: React.FC<GodaddyExportModalProps> = ({
   onClose,
   audioEnabled = true
 }) => {
-  const [activeTab, setActiveTab] = useState<'download' | 'cpanel-guide' | 'builder-guide' | 'contents'>('download');
+  const [activeTab, setActiveTab] = useState<'download' | 'github-guide' | 'cpanel-guide' | 'builder-guide' | 'contents'>('github-guide');
   const [isPackaging, setIsPackaging] = useState(false);
   const [packageMessage, setPackageMessage] = useState<string | null>(null);
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
@@ -77,13 +79,13 @@ export const GodaddyExportModal: React.FC<GodaddyExportModalProps> = ({
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <h3 className="font-heading font-bold text-lg text-white">GoDaddy Export & Deployment Center</h3>
+                <h3 className="font-heading font-bold text-lg text-white">Deployment & Export Center</h3>
                 <span className="text-[10px] uppercase font-mono tracking-widest px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-semibold">
-                  Ready to Import
+                  GitHub & GoDaddy Ready
                 </span>
               </div>
               <p className="text-xs text-zinc-400 font-sans mt-0.5">
-                Packaged zip files optimized for GoDaddy cPanel, Web Hosting, or File Manager extraction
+                Fix GitHub Pages blank screen, deploy via GitHub Actions, or export GoDaddy production package
               </p>
             </div>
           </div>
@@ -101,6 +103,20 @@ export const GodaddyExportModal: React.FC<GodaddyExportModalProps> = ({
 
         {/* Navigation Tabs */}
         <div className="flex border-b border-zinc-800 bg-zinc-950 px-6 overflow-x-auto text-xs font-mono">
+          <button
+            onClick={() => {
+              if (audioEnabled) playClickSound('toggle');
+              setActiveTab('github-guide');
+            }}
+            className={`py-3.5 px-4 border-b-2 font-medium transition-colors flex items-center space-x-2 whitespace-nowrap ${
+              activeTab === 'github-guide'
+                ? 'border-white text-white bg-zinc-900/40'
+                : 'border-transparent text-zinc-400 hover:text-zinc-200'
+            }`}
+          >
+            <GitBranch className="w-4 h-4 text-emerald-400" />
+            <span>GitHub Pages (Fix Blank Screen)</span>
+          </button>
           <button
             onClick={() => {
               if (audioEnabled) playClickSound('toggle');
@@ -127,7 +143,7 @@ export const GodaddyExportModal: React.FC<GodaddyExportModalProps> = ({
             }`}
           >
             <Server className="w-4 h-4" />
-            <span>GoDaddy cPanel Steps</span>
+            <span>GoDaddy cPanel</span>
           </button>
           <button
             onClick={() => {
@@ -141,7 +157,7 @@ export const GodaddyExportModal: React.FC<GodaddyExportModalProps> = ({
             }`}
           >
             <HelpCircle className="w-4 h-4" />
-            <span>GoDaddy Website Builder Info</span>
+            <span>GoDaddy Builder</span>
           </button>
           <button
             onClick={() => {
@@ -162,6 +178,161 @@ export const GodaddyExportModal: React.FC<GodaddyExportModalProps> = ({
         {/* Tab Content Body */}
         <div className="p-6 overflow-y-auto space-y-6 flex-1 text-sm text-zinc-300">
           
+          {/* TAB 0: GITHUB PAGES GUIDE & FIX */}
+          {activeTab === 'github-guide' && (
+            <div className="space-y-6">
+              {/* Alert: Cause of Blank Screen */}
+              <div className="p-4 rounded-xl bg-amber-950/30 border border-amber-500/40 text-amber-200">
+                <div className="flex items-center space-x-2 text-amber-300 font-semibold mb-1.5">
+                  <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
+                  <span>Why Did GitHub Pages Show a Blank White Page?</span>
+                </div>
+                <p className="text-xs text-amber-200/90 leading-relaxed">
+                  Your project is built with <strong>React 19, TypeScript, and Tailwind CSS</strong>. GitHub Pages is a static file host that does not know how to run TypeScript (<code className="bg-black/40 px-1 py-0.5 rounded text-amber-100">.tsx</code>) files in the browser. When you deploy raw source files or use Jekyll, the browser attempts to load <code className="bg-black/40 px-1 py-0.5 rounded text-amber-100">/src/main.tsx</code> and fails with a syntax/MIME error, leaving a blank white screen.
+                </p>
+              </div>
+
+              {/* The Fix */}
+              <div className="p-5 rounded-xl bg-gradient-to-b from-zinc-900 to-zinc-950 border border-emerald-500/30">
+                <div className="flex items-center space-x-2 text-emerald-400 font-heading font-bold text-base mb-2">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                  <span>How We Fixed It: 1-Click Setting in GitHub</span>
+                </div>
+                <p className="text-xs text-zinc-300 leading-relaxed mb-4">
+                  We have added an automated production workflow at <code className="text-white bg-zinc-800 px-1.5 py-0.5 rounded font-mono">.github/workflows/deploy.yml</code> and configured <code className="text-white bg-zinc-800 px-1.5 py-0.5 rounded font-mono">.nojekyll</code> and <code className="text-white bg-zinc-800 px-1.5 py-0.5 rounded font-mono">404.html</code>. All you need to do is switch GitHub's deployment source:
+                </p>
+
+                <div className="grid grid-cols-1 gap-3 text-xs font-sans">
+                  <div className="p-3.5 rounded-lg bg-black/60 border border-zinc-800 flex items-start space-x-3">
+                    <span className="w-5 h-5 rounded-full bg-emerald-400 text-black font-mono font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">1</span>
+                    <div>
+                      <strong className="text-white">Go to your Repository on GitHub</strong>
+                      <p className="text-zinc-400 mt-0.5">Click the <strong className="text-zinc-200">Settings</strong> tab at the top right of your GitHub repo.</p>
+                    </div>
+                  </div>
+
+                  <div className="p-3.5 rounded-lg bg-black/60 border border-zinc-800 flex items-start space-x-3">
+                    <span className="w-5 h-5 rounded-full bg-emerald-400 text-black font-mono font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">2</span>
+                    <div>
+                      <strong className="text-white">Click "Pages" in the left sidebar</strong>
+                      <p className="text-zinc-400 mt-0.5">Under <strong className="text-zinc-200">Build and deployment &gt; Source</strong>, click the dropdown.</p>
+                    </div>
+                  </div>
+
+                  <div className="p-3.5 rounded-lg bg-black/60 border border-emerald-500/40 flex items-start space-x-3">
+                    <span className="w-5 h-5 rounded-full bg-emerald-400 text-black font-mono font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">3</span>
+                    <div>
+                      <strong className="text-emerald-300">Select "GitHub Actions" (Instead of "Deploy from a branch")</strong>
+                      <p className="text-zinc-400 mt-0.5">
+                        GitHub will immediately trigger our workflow, install dependencies, compile the production React bundle into <code className="text-zinc-200">dist/</code>, and deploy your site live!
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Workflow File Viewer */}
+              <div className="p-4 rounded-xl bg-zinc-900/80 border border-zinc-800 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <FileCode className="w-4 h-4 text-white" />
+                    <span className="font-mono text-xs font-semibold text-white">.github/workflows/deploy.yml (Included in repo)</span>
+                  </div>
+                  <button
+                    onClick={() => handleCopy(`name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: ["main", "master"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build static site with Vite
+        run: npm run build
+
+      - name: Prevent Jekyll processing
+        run: touch dist/.nojekyll
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './dist'
+
+  deploy:
+    environment:
+      name: github-pages
+      url: \${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4`, 'workflow')}
+                    className="flex items-center space-x-1 text-xs font-mono text-zinc-400 hover:text-white transition"
+                  >
+                    {copiedCode === 'workflow' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    <span>{copiedCode === 'workflow' ? 'Copied!' : 'Copy Workflow YAML'}</span>
+                  </button>
+                </div>
+                <pre className="p-3 bg-black rounded-lg border border-zinc-800 text-[11px] font-mono text-zinc-400 overflow-x-auto leading-relaxed max-h-48">
+{`name: Deploy to GitHub Pages
+on:
+  push:
+    branches: ["main", "master"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm install
+      - run: npm run build
+      - run: touch dist/.nojekyll
+      - uses: actions/upload-pages-artifact@v3
+        with: { path: './dist' }
+  deploy:
+    needs: build
+    steps:
+      - uses: actions/deploy-pages@v4`}
+                </pre>
+              </div>
+
+              {/* Direct Alternative: Manual Prebuilt Branch */}
+              <div className="p-4 rounded-xl bg-zinc-900/40 border border-zinc-800 text-xs">
+                <h5 className="font-heading font-semibold text-white mb-1">Alternative: Manual Static Branch</h5>
+                <p className="text-zinc-400 leading-relaxed">
+                  If you do not want to use GitHub Actions, you can click <strong className="text-zinc-200">"Download ZIPs"</strong>, download <strong className="text-zinc-200">godaddy_website_build.zip</strong>, extract the compiled files (<code className="text-zinc-300">index.html</code> and <code className="text-zinc-300">assets/</code>), and push those compiled files directly into a <code className="text-emerald-400">gh-pages</code> branch.
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* TAB 1: DOWNLOADS */}
           {activeTab === 'download' && (
             <div className="space-y-6">
